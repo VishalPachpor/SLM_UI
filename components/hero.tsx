@@ -16,13 +16,14 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@/public/logo.png";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useWallet } from "@/hooks/use-wallet";
+import { WalletModal } from "@/components/ui/wallet-modal";
 
 const floatingBubbles = [
   // Left side bubbles
@@ -175,24 +176,15 @@ const floatingBubbles = [
 
 export function Hero() {
   const router = useRouter();
-  const [address, setAddress] = useState<string | null>(null);
-  const [isConnecting, setIsConnecting] = useState(false);
-
-  const connectWallet = async () => {
-    try {
-      setIsConnecting(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setAddress("0x03b4...7ddb94");
-    } catch (error) {
-      console.error("Failed to connect wallet:", error);
-    } finally {
-      setIsConnecting(false);
-    }
-  };
-
-  const disconnectWallet = () => {
-    setAddress(null);
-  };
+  const {
+    connectWallet,
+    disconnectWallet,
+    isConnected,
+    formattedAddress,
+    isConnecting,
+    showWalletModal,
+    handleModalClose,
+  } = useWallet();
 
   return (
     <>
@@ -235,12 +227,12 @@ export function Hero() {
               >
                 FAQ's
               </Link>
-              {address ? (
+              {isConnected ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="gap-2">
                       <WalletIcon className="h-4 w-4" />
-                      {address}
+                      {formattedAddress}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -267,53 +259,38 @@ export function Hero() {
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a1229] pt-16">
-        {/* Full-width Animation Background */}
+        {/* Enhanced Animation Background */}
         <div className="absolute inset-0 overflow-hidden">
-          {/* Enhanced gradient background */}
-          <div className="absolute inset-0">
+          {/* Gradient background with enhanced animation */}
+          <motion.div
+            className="absolute inset-0"
+            animate={{
+              background: [
+                "radial-gradient(circle at 30% 30%, rgba(237, 121, 107, 0.1), transparent 50%)",
+                "radial-gradient(circle at 70% 70%, rgba(237, 121, 107, 0.1), transparent 50%)",
+                "radial-gradient(circle at 30% 30%, rgba(237, 121, 107, 0.1), transparent 50%)",
+              ],
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
             <div className="absolute inset-0 bg-gradient-to-r from-[#ed796b]/10 via-[#BB86FC]/10 to-[#ed796b]/5" />
             <div className="absolute inset-0 bg-gradient-to-b from-[#ed796b]/5 to-transparent" />
-          </div>
+          </motion.div>
 
-          {/* Animated network pattern */}
-          <svg className="absolute inset-0 w-full h-full z-0 opacity-10">
-            <pattern
-              id="network"
-              x="0"
-              y="0"
-              width="50"
-              height="50"
-              patternUnits="userSpaceOnUse"
-            >
-              <motion.circle
-                cx="25"
-                cy="25"
-                r="2"
-                fill="#ed796b"
-                animate={{ r: [2, 3, 2] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-              <motion.path
-                d="M25 25 L50 25 M25 25 L25 50 M25 25 L50 50 M25 25 L0 50"
-                stroke="#BB86FC"
-                strokeWidth="0.5"
-                animate={{ opacity: [0.3, 0.6, 0.3] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              />
-            </pattern>
-            <rect width="100%" height="100%" fill="url(#network)" />
-          </svg>
-
-          {/* Floating bubbles */}
+          {/* Floating bubbles with enhanced animations */}
           {floatingBubbles.map((bubble, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, x: 0, y: 0 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{
                 opacity: [0.4, 0.8, 0.4],
-                x: [0, 20 * Math.sin(index), 0],
-                y: [0, 20 * Math.cos(index), 0],
                 scale: [1, 1.2, 1],
+                x: [0, Math.sin(index) * 30, 0],
+                y: [0, Math.cos(index) * 30, 0],
               }}
               transition={{
                 duration: bubble.duration,
@@ -325,8 +302,17 @@ export function Hero() {
               style={bubble.position}
             >
               <div className="relative group">
-                <div
+                <motion.div
                   className="absolute inset-0 rounded-full blur-xl group-hover:blur-2xl transition-all duration-300"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.6, 0.3],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                   style={{
                     background: `radial-gradient(circle, ${
                       index % 2 === 0 ? "#ed796b" : "#BB86FC"
@@ -346,7 +332,7 @@ export function Hero() {
             </motion.div>
           ))}
 
-          {/* Enhanced connection lines */}
+          {/* Enhanced network lines */}
           <svg className="absolute inset-0 w-full h-full z-0 opacity-20">
             {[...Array(5)].map((_, i) => (
               <motion.path
@@ -362,41 +348,86 @@ export function Hero() {
                 strokeWidth="1"
                 fill="none"
                 initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 1 }}
+                animate={{
+                  pathLength: [0, 1, 0],
+                  opacity: [0.2, 1, 0.2],
+                }}
                 transition={{
-                  duration: 3 + i,
+                  duration: 8 + i,
                   repeat: Infinity,
                   delay: i * 0.5,
+                  ease: "easeInOut",
                 }}
               />
             ))}
             <defs>
               <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#ed796b" />
-                <stop offset="50%" stopColor="#BB86FC" />
-                <stop offset="100%" stopColor="#ed796b" />
+                <stop offset="0%" stopColor="#ed796b">
+                  <animate
+                    attributeName="stop-color"
+                    values="#ed796b; #BB86FC; #ed796b"
+                    dur="8s"
+                    repeatCount="indefinite"
+                  />
+                </stop>
+                <stop offset="50%" stopColor="#BB86FC">
+                  <animate
+                    attributeName="stop-color"
+                    values="#BB86FC; #ed796b; #BB86FC"
+                    dur="8s"
+                    repeatCount="indefinite"
+                  />
+                </stop>
+                <stop offset="100%" stopColor="#ed796b">
+                  <animate
+                    attributeName="stop-color"
+                    values="#ed796b; #BB86FC; #ed796b"
+                    dur="8s"
+                    repeatCount="indefinite"
+                  />
+                </stop>
               </linearGradient>
             </defs>
           </svg>
         </div>
 
-        {/* Content */}
+        {/* Content with enhanced animations */}
         <div className="container relative z-10 mx-auto px-4">
           <div className="ml-auto max-w-[600px] space-y-8">
             <motion.h1
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.2,
+                ease: "easeOut",
+              }}
               className="text-5xl md:text-7xl font-bold tracking-tight text-[#E6EDF3] leading-tight"
             >
               Smart Liquidity,{" "}
-              <div className="text-[#ed796b]">Automated Yields</div>
+              <motion.div
+                className="text-[#ed796b]"
+                animate={{
+                  color: ["#ed796b", "#BB86FC", "#ed796b"],
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                Automated Yields
+              </motion.div>
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.4,
+                ease: "easeOut",
+              }}
               className="text-xl text-[#A8B2D1] font-light"
             >
               We're global consultancy that helps the world's most ambitious
@@ -404,9 +435,13 @@ export function Hero() {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.6,
+                ease: "easeOut",
+              }}
               className="flex gap-4"
             >
               <Button
@@ -428,6 +463,7 @@ export function Hero() {
           </div>
         </div>
       </section>
+      <WalletModal isOpen={showWalletModal} onClose={handleModalClose} />
     </>
   );
 }

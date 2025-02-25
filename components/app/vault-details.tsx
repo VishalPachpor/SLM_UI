@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeftIcon,
@@ -20,6 +20,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
+import { VaultDetailsSkeleton } from "./vault-details-skeleton";
 
 // Import the vaults data from the vaults list component
 const vaults = [
@@ -170,12 +171,74 @@ const vaults = [
   },
 ];
 
+// Get color based on vault ID
+const getStatusColor = (vaultId: string) => {
+  switch (vaultId) {
+    case "usdc":
+      return {
+        border: "border-green-500/20",
+        dotBg: "bg-green-400",
+        dotSolid: "bg-green-500",
+        text: "text-green-400",
+        badge: "bg-green-500/20",
+        count: "4",
+      };
+    case "eth":
+      return {
+        border: "border-blue-500/20",
+        dotBg: "bg-blue-400",
+        dotSolid: "bg-blue-500",
+        text: "text-blue-400",
+        badge: "bg-blue-500/20",
+        count: "2",
+      };
+    case "strk":
+      return {
+        border: "border-purple-500/20",
+        dotBg: "bg-purple-400",
+        dotSolid: "bg-purple-500",
+        text: "text-purple-400",
+        badge: "bg-purple-500/20",
+        count: "3",
+      };
+    case "usdt":
+      return {
+        border: "border-yellow-500/20",
+        dotBg: "bg-yellow-400",
+        dotSolid: "bg-yellow-500",
+        text: "text-yellow-400",
+        badge: "bg-yellow-500/20",
+        count: "5",
+      };
+    default:
+      return {
+        border: "border-green-500/20",
+        dotBg: "bg-green-400",
+        dotSolid: "bg-green-500",
+        text: "text-green-400",
+        badge: "bg-green-500/20",
+        count: "1",
+      };
+  }
+};
+
 export function VaultDetails({ vaultId }: { vaultId: string }) {
   const vault = vaults.find((v) => v.id === vaultId);
   const [amount, setAmount] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("deposit");
+
+  const statusColors = getStatusColor(vaultId);
+
+  useEffect(() => {
+    // Simulate API fetch
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   if (!vault) return null;
 
@@ -222,6 +285,10 @@ export function VaultDetails({ vaultId }: { vaultId: string }) {
     }
   };
 
+  if (isLoading) {
+    return <VaultDetailsSkeleton />;
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
       <motion.div
@@ -237,6 +304,28 @@ export function VaultDetails({ vaultId }: { vaultId: string }) {
             <ArrowLeftIcon className="h-6 w-6" />
           </Link>
           <h1 className="text-2xl font-bold text-[#E6EDF3]">{vault.name}</h1>
+
+          {/* Vault Status Indicator */}
+          <div
+            className={`flex items-center gap-2 px-3 py-1.5 ml-auto bg-[#0a1229]/80 ${statusColors.border} rounded-full`}
+          >
+            <span className="relative flex h-2.5 w-2.5">
+              <span
+                className={`animate-ping absolute inline-flex h-full w-full rounded-full ${statusColors.dotBg} opacity-75`}
+              ></span>
+              <span
+                className={`relative inline-flex rounded-full h-2.5 w-2.5 ${statusColors.dotSolid}`}
+              ></span>
+            </span>
+            <span className={`${statusColors.text} text-xs font-medium`}>
+              Active
+            </span>
+            <span
+              className={`text-white/80 ${statusColors.badge} text-xs px-2 py-0.5 rounded-full`}
+            >
+              {statusColors.count} active
+            </span>
+          </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">

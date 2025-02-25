@@ -6,10 +6,10 @@ import { Twitter, Github, DiscIcon, Mail } from "lucide-react";
 
 const navigation = {
   product: [
-    { name: "Features", href: "/#features" },
-    { name: "How it Works", href: "/#how-it-works" },
-    { name: "Security", href: "/#security" },
-    { name: "FAQ", href: "/#faq" },
+    { name: "Features", href: "/#features", id: "features" },
+    { name: "How it Works", href: "/#how-it-works", id: "how-it-works" },
+    { name: "Security", href: "/#security", id: "security" },
+    { name: "FAQ", href: "/#faq", id: "faq" },
   ],
   company: [
     { name: "About", href: "/about" },
@@ -99,7 +99,16 @@ export function Footer() {
                 <li key={item.name}>
                   <Link
                     href={item.href}
+                    scroll={false}
                     className="text-[#A8B2D1] hover:text-[#ed796b] transition-colors"
+                    onClick={(e) => {
+                      if (item.id) {
+                        e.preventDefault();
+                        document
+                          .getElementById(item.id)
+                          ?.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }}
                   >
                     {item.name}
                   </Link>
@@ -158,6 +167,44 @@ export function Footer() {
             <div className="flex items-center gap-2 text-[#A8B2D1]">
               <Mail className="h-5 w-5" />
               <span>contact@slm.finance</span>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-[#0a1229]/80 border border-green-500/20 rounded-full">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                </span>
+                <span className="text-green-400 text-xs font-medium">
+                  USDC Vault
+                </span>
+                <span className="text-white/80 bg-green-500/20 text-xs px-2 py-0.5 rounded-full">
+                  4 active
+                </span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-[#0a1229]/80 border border-blue-500/20 rounded-full">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
+                </span>
+                <span className="text-blue-400 text-xs font-medium">
+                  ETH Vault
+                </span>
+                <span className="text-white/80 bg-blue-500/20 text-xs px-2 py-0.5 rounded-full">
+                  2 active
+                </span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-[#0a1229]/80 border border-purple-500/20 rounded-full">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-purple-500"></span>
+                </span>
+                <span className="text-purple-400 text-xs font-medium">
+                  STRK Vault
+                </span>
+                <span className="text-white/80 bg-purple-500/20 text-xs px-2 py-0.5 rounded-full">
+                  3 active
+                </span>
+              </div>
             </div>
             <p className="text-[#A8B2D1]">
               © {new Date().getFullYear()} SLM. All rights reserved.

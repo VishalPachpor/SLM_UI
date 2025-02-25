@@ -19,6 +19,9 @@ import {
   Activity,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { DashboardSkeleton } from "./dashboard-skeleton";
 
 const portfolioStats = {
   totalValue: "$12,450",
@@ -58,6 +61,7 @@ const recentActivity = [
 
 const positions = [
   {
+    id: "usdc",
     vault: "Ever Yield USDC",
     value: "$5,000",
     yield: "+$425",
@@ -65,6 +69,7 @@ const positions = [
     allocation: 40,
   },
   {
+    id: "eth",
     vault: "Ever Yield ETH",
     value: "$3,750",
     yield: "+$320",
@@ -72,6 +77,7 @@ const positions = [
     allocation: 30,
   },
   {
+    id: "strk",
     vault: "Ever Yield STRK",
     value: "$2,500",
     yield: "+$350",
@@ -79,6 +85,7 @@ const positions = [
     allocation: 20,
   },
   {
+    id: "usdt",
     vault: "Ever Yield USDT",
     value: "$1,200",
     yield: "+$150",
@@ -88,6 +95,21 @@ const positions = [
 ];
 
 export function Dashboard() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate API fetch
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <DashboardSkeleton />;
+  }
+
   return (
     <div className="space-y-8">
       {/* Portfolio Overview */}
@@ -185,39 +207,42 @@ export function Dashboard() {
           <CardContent>
             <div className="space-y-6">
               {positions.map((position, index) => (
-                <div
+                <Link
                   key={index}
-                  className="p-4 rounded-lg border border-[#A8B2D1]/10 hover:border-[#ed796b]/50 transition-all duration-300"
+                  href={`/app/vaults/${position.id}`}
+                  className="block"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h4 className="font-medium text-[#E6EDF3]">
-                        {position.vault}
-                      </h4>
-                      <div className="text-sm text-[#A8B2D1] mt-1">
-                        Value: {position.value}
+                  <div className="p-4 rounded-lg border border-[#A8B2D1]/10 hover:border-[#ed796b]/50 transition-all duration-300 cursor-pointer">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h4 className="font-medium text-[#E6EDF3]">
+                          {position.vault}
+                        </h4>
+                        <div className="text-sm text-[#A8B2D1] mt-1">
+                          Value: {position.value}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[#4CAF50]">{position.yield}</div>
+                        <div className="text-sm text-[#ed796b]">
+                          APY: {position.apy}
+                        </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-[#4CAF50]">{position.yield}</div>
-                      <div className="text-sm text-[#ed796b]">
-                        APY: {position.apy}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-[#A8B2D1]">Allocation</span>
+                        <span className="text-[#E6EDF3]">
+                          {position.allocation}%
+                        </span>
                       </div>
+                      <Progress
+                        value={position.allocation}
+                        className="h-2 bg-[#A8B2D1]/10 [&>div]:bg-[#ed796b]"
+                      />
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-[#A8B2D1]">Allocation</span>
-                      <span className="text-[#E6EDF3]">
-                        {position.allocation}%
-                      </span>
-                    </div>
-                    <Progress
-                      value={position.allocation}
-                      className="h-2 bg-[#A8B2D1]/10 [&>div]:bg-[#ed796b]"
-                    />
-                  </div>
-                </div>
+                </Link>
               ))}
             </div>
           </CardContent>
@@ -234,47 +259,53 @@ export function Dashboard() {
           <CardContent>
             <div className="space-y-6">
               {recentActivity.map((activity, index) => (
-                <div
+                <Link
                   key={index}
-                  className="flex items-start gap-4 pb-4 border-b border-[#A8B2D1]/10 last:border-0 last:pb-0"
+                  href={`/app/vaults/${activity.vault
+                    .split(" ")
+                    .pop()
+                    ?.toLowerCase()}`}
+                  className="block"
                 >
-                  <div
-                    className={`p-2 rounded-full ${
-                      activity.type === "Deposit"
-                        ? "bg-[#4CAF50]/10 text-[#4CAF50]"
-                        : "bg-[#ed796b]/10 text-[#ed796b]"
-                    }`}
-                  >
-                    {activity.type === "Deposit" ? (
-                      <ArrowUpRight className="h-4 w-4" />
-                    ) : (
-                      <ArrowDownRight className="h-4 w-4" />
-                    )}
+                  <div className="flex items-start gap-4 pb-4 border-b border-[#A8B2D1]/10 last:border-0 last:pb-0 hover:bg-[#0a1229]/50 rounded-md p-2 transition-all duration-300 cursor-pointer">
+                    <div
+                      className={`p-2 rounded-full ${
+                        activity.type === "Deposit"
+                          ? "bg-[#4CAF50]/10 text-[#4CAF50]"
+                          : "bg-[#ed796b]/10 text-[#ed796b]"
+                      }`}
+                    >
+                      {activity.type === "Deposit" ? (
+                        <ArrowUpRight className="h-4 w-4" />
+                      ) : (
+                        <ArrowDownRight className="h-4 w-4" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between">
+                        <h4 className="font-medium text-[#E6EDF3]">
+                          {activity.type}
+                        </h4>
+                        <span
+                          className={
+                            activity.type === "Deposit"
+                              ? "text-[#4CAF50]"
+                              : "text-[#ed796b]"
+                          }
+                        >
+                          {activity.amount}
+                        </span>
+                      </div>
+                      <div className="text-sm text-[#A8B2D1]">
+                        {activity.vault}
+                      </div>
+                      <div className="flex items-center gap-2 mt-1 text-sm text-[#A8B2D1]">
+                        <Clock className="h-3 w-3" />
+                        {activity.time}
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between">
-                      <h4 className="font-medium text-[#E6EDF3]">
-                        {activity.type}
-                      </h4>
-                      <span
-                        className={
-                          activity.type === "Deposit"
-                            ? "text-[#4CAF50]"
-                            : "text-[#ed796b]"
-                        }
-                      >
-                        {activity.amount}
-                      </span>
-                    </div>
-                    <div className="text-sm text-[#A8B2D1]">
-                      {activity.vault}
-                    </div>
-                    <div className="flex items-center gap-2 mt-1 text-sm text-[#A8B2D1]">
-                      <Clock className="h-3 w-3" />
-                      {activity.time}
-                    </div>
-                  </div>
-                </div>
+                </Link>
               ))}
             </div>
           </CardContent>

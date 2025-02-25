@@ -59,7 +59,7 @@ const item = {
 
 export function FAQ() {
   return (
-    <section className="py-24 relative overflow-hidden bg-[#0a1229]">
+    <section id="faq" className="py-24 relative overflow-hidden bg-[#0a1229]">
       {/* Background Elements */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[#ed796b]/5" />

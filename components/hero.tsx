@@ -204,26 +204,54 @@ export function Hero() {
                 HOME
               </Link>
               <Link
-                href="#features"
+                href="/#features"
+                scroll={false}
                 className="text-[#A8B2D1] hover:text-[#ed796b] transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document
+                    .getElementById("features")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }}
               >
                 FEATURES
               </Link>
               <Link
-                href="#how-it-works"
+                href="/#how-it-works"
+                scroll={false}
                 className="text-[#A8B2D1] hover:text-[#ed796b] transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document
+                    .getElementById("how-it-works")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }}
               >
                 HOW IT WORKS
               </Link>
               <Link
-                href="#roadmap"
+                href="/#roadmap"
+                scroll={false}
                 className="text-[#A8B2D1] hover:text-[#ed796b] transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document
+                    .getElementById("roadmap")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }}
               >
                 ROADMAP
               </Link>
               <Link
-                href="#faq"
+                href="/#faq"
+                scroll={false}
                 className="text-[#A8B2D1] hover:text-[#ed796b] transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document
+                    .getElementById("faq")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }}
               >
                 FAQ's
               </Link>
@@ -435,6 +463,17 @@ export function Hero() {
             </motion.p>
 
             <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="inline-block px-3 py-1 text-sm font-medium text-gray-300 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full border border-gray-700"
+            >
+              <span className="font-sans">
+                Now using Space Grotesk font throughout the platform
+              </span>
+            </motion.div>
+
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -444,14 +483,15 @@ export function Hero() {
               }}
               className="flex gap-4"
             >
-              <Button
-                size="lg"
-                onClick={() => router.push("/app/vaults")}
-                className="text-base bg-white text-[#0a1229] hover:bg-white/90 transition-all duration-300 group px-6 py-4"
-              >
-                LAUNCH APP
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              <Link href="/app/vaults" passHref>
+                <Button
+                  size="lg"
+                  className="text-base bg-white text-[#0a1229] hover:bg-white/90 transition-all duration-300 group px-6 py-4"
+                >
+                  LAUNCH APP
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
               <Button
                 size="lg"
                 variant="outline"

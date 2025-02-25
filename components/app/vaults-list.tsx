@@ -12,8 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TrendingUp, Search, Filter } from "lucide-react";
+import { VaultsListSkeleton } from "./vaults-list-skeleton";
 
 const vaults = [
   {
@@ -89,6 +90,16 @@ export function VaultsList() {
   const [selectedChain, setSelectedChain] = useState("All");
   const [sortBy, setSortBy] = useState("APY");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate API fetch
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredVaults = vaults.filter((vault) => {
     if (selectedCategory !== "All" && vault.category !== selectedCategory)
@@ -101,6 +112,10 @@ export function VaultsList() {
       return false;
     return true;
   });
+
+  if (isLoading) {
+    return <VaultsListSkeleton />;
+  }
 
   return (
     <div className="space-y-6">

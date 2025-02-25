@@ -37,7 +37,8 @@ export function AppHeader() {
   };
 
   const isActive = (path: string) => {
-    if (path === "/app" && pathname === "/app") return true;
+    if (path === "/app/dashboard" && pathname.startsWith("/app/dashboard"))
+      return true;
     if (path === "/app/vaults" && pathname.startsWith("/app/vaults"))
       return true;
     return false;
@@ -54,17 +55,6 @@ export function AppHeader() {
           </Link>
           <nav className="hidden md:flex gap-6">
             <Link
-              href="/app"
-              className={`flex items-center gap-2 text-lg font-medium transition-colors ${
-                isActive("/app")
-                  ? "text-[#ed796b]"
-                  : "text-[#A8B2D1] hover:text-[#ed796b]"
-              }`}
-            >
-              <LayoutDashboard className="h-5 w-5" />
-              Dashboard
-            </Link>
-            <Link
               href="/app/vaults"
               className={`flex items-center gap-2 text-lg font-medium transition-colors ${
                 isActive("/app/vaults")
@@ -74,6 +64,17 @@ export function AppHeader() {
             >
               <Database className="h-5 w-5" />
               Vaults
+            </Link>
+            <Link
+              href="/app/dashboard"
+              className={`flex items-center gap-2 text-lg font-medium transition-colors ${
+                isActive("/app/dashboard")
+                  ? "text-[#ed796b]"
+                  : "text-[#A8B2D1] hover:text-[#ed796b]"
+              }`}
+            >
+              <LayoutDashboard className="h-5 w-5" />
+              Dashboard
             </Link>
           </nav>
         </div>

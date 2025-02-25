@@ -411,7 +411,7 @@ export function Hero() {
             >
               <Button
                 size="lg"
-                onClick={() => router.push("/app")}
+                onClick={() => router.push("/app/vaults")}
                 className="text-base bg-white text-[#0a1229] hover:bg-white/90 transition-all duration-300 group px-6 py-4"
               >
                 LAUNCH APP

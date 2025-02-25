@@ -5,10 +5,9 @@ import { Shield, Lock, CheckCircle } from "lucide-react";
 import Image from "next/image";
 
 const partners = [
-  { name: "StarkNet", logo: "/starknet.svg" },
-  { name: "Nostra", logo: "/nostra.svg" },
-  { name: "Vesu", logo: "/vesu.svg" },
-  { name: "Audit Partner", logo: "/audit.svg" },
+  { name: "StarkNet", logo: "/starknet.png", width: 150, height: 50 },
+  { name: "Nostra", logo: "/nostra.png", width: 140, height: 50 },
+  { name: "Vesu", logo: "/vesu.png", width: 120, height: 40 },
 ];
 
 const trustPoints = [
@@ -55,7 +54,7 @@ export function TrustSignals() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#E6EDF3]">
-            Trusted by Leading Protocols
+            Trusted by Leading Partners 
           </h2>
           <p className="text-[#A8B2D1] text-lg max-w-2xl mx-auto">
             Built on secure foundations with industry-leading partners
@@ -67,7 +66,7 @@ export function TrustSignals() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16"
+          className="flex flex-wrap justify-center gap-12 md:gap-24 mb-16"
         >
           {partners.map((partner, index) => (
             <motion.div
@@ -78,9 +77,10 @@ export function TrustSignals() {
               <Image
                 src={partner.logo}
                 alt={partner.name}
-                width={120}
-                height={40}
-                className="opacity-70 hover:opacity-100 transition-opacity"
+                width={partner.width}
+                height={partner.height}
+                className="opacity-80 hover:opacity-100 transition-opacity"
+                style={{ objectFit: "contain" }}
               />
             </motion.div>
           ))}

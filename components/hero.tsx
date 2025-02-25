@@ -193,7 +193,7 @@ export function Hero() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="text-2xl font-bold text-white flex items-center gap-2">
-              <Image src={logo} alt="" width={120} height={120} />
+              <Image src={logo} alt="" width={100} height={70} />
             </div>
             {/* Navigation Links */}
             <div className="hidden md:flex items-center gap-8">

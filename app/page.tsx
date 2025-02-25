@@ -1,11 +1,11 @@
-import { Header } from "@/components/header"
-import { Hero } from "@/components/hero"
-import { Features } from "@/components/features"
-import { HowItWorks } from "@/components/how-it-works"
-import { TrustSignals } from "@/components/trust-signals"
-import { FAQ } from "@/components/faq"
-import { Footer } from "@/components/footer"
-
+import { Header } from "@/components/header";
+import { Hero } from "@/components/hero";
+import { Features } from "@/components/features";
+import { HowItWorks } from "@/components/how-it-works";
+import { TrustSignals } from "@/components/trust-signals";
+import { FAQ } from "@/components/faq";
+import { Footer } from "@/components/footer";
+import { RoadmapSection } from "@/components/roadmap-section";
 
 export default function Page() {
   return (
@@ -16,10 +16,10 @@ export default function Page() {
         <Features />
         <HowItWorks />
         <TrustSignals />
+        <RoadmapSection />
         <FAQ />
       </main>
       <Footer />
     </div>
-  )
+  );
 }
-
